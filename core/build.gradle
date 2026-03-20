@@ -1,0 +1,8 @@
+apply plugin: 'kotlin'
+
+sourceSets.main.java.srcDirs = ["src/main/kotlin"]
+
+dependencies {
+    api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+}

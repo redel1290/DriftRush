@@ -86,9 +86,9 @@ class Car(
         val seg = track.getSegmentAt(position)
         if (seg != null) {
             val targetAngle = MathUtils.atan2(seg.direction.y, seg.direction.x) * MathUtils.radiansToDegrees
-            // Плавно повертаємо машину в напрям траси
-            val turnRate = 80f * handlingMultiplier * delta
             val angleDiff = normalizeAngle(targetAngle - facingAngle)
+            // Швидкість повороту залежить від кута відхилення — чим більше відхилення тим швидше
+            val turnRate = (120f + Math.abs(angleDiff) * 2f) * handlingMultiplier * delta
             facingAngle += angleDiff.coerceIn(-turnRate, turnRate)
         }
 

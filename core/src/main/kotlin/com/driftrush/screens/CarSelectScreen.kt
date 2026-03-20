@@ -85,7 +85,7 @@ class CarSelectScreen(private val game: DriftRushGame) : Screen {
 
         // Монети текст
         game.fontMedium.setColor(0.3f, 0.2f, 0f, 1f)
-        game.fontMedium.draw(game.batch, "\uD83E\uDE99 ${game.coins}", W/2f - 85f, H - 36f)
+        game.fontMedium.draw(game.batch, "[M] ${game.coins}", W/2f - 85f, H - 36f)
 
         // Заголовок
         game.fontMedium.setColor(0.15f, 0.15f, 0.15f, 1f)
@@ -126,14 +126,14 @@ class CarSelectScreen(private val game: DriftRushGame) : Screen {
                 }
                 else -> {
                     game.fontSmall.setColor(0.7f, 0.5f, 0f, 1f)
-                    game.fontSmall.draw(game.batch, "\uD83E\uDE99${car.price}", x + 16f, y + 28f)
+                    game.fontSmall.draw(game.batch, "[M]${car.price}", x + 16f, y + 28f)
                 }
             }
 
             // Замок
             if (!owned) {
                 game.fontMedium.setColor(0.3f, 0.3f, 0.3f, 0.6f)
-                game.fontMedium.draw(game.batch, "\uD83D\uDD12", x + CELL_W/2f - 14f, y + CELL_H/2f + 10f)
+                game.fontMedium.draw(game.batch, "[X]", x + CELL_W/2f - 14f, y + CELL_H/2f + 10f)
             }
         }
 

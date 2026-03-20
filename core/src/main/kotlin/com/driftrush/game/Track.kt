@@ -51,44 +51,44 @@ class Track(private val blocks: List<TrackBlock>, private val isTutorial: Boolea
 
         fun rad(deg: Float) = deg * Math.PI.toFloat() / 180f
 
-        fun addStraightSegments(count: Int, width: Float) {
-            repeat(count) {
-                val dir = Vector2(cos(rad(angle)), sin(rad(angle)))
-                val normal = Vector2(-dir.y, dir.x)
-                val end = Vector2(pos.x + dir.x * SEGMENT_LENGTH, pos.y + dir.y * SEGMENT_LENGTH)
-                segments.add(TrackSegment(pos.cpy(), end.cpy(), dir.cpy(), normal.cpy(), width, BlockType.STRAIGHT))
-                pos.set(end)
-            }
+        fun addSeg(width: Float, type: BlockType) {
+            val dir = Vector2(cos(rad(angle)), sin(rad(angle)))
+            val normal = Vector2(-dir.y, dir.x)
+            val end = Vector2(pos.x + dir.x * SEGMENT_LENGTH, pos.y + dir.y * SEGMENT_LENGTH)
+            segments.add(TrackSegment(pos.cpy(), end.cpy(), dir.cpy(), normal.cpy(), width, type))
+            pos.set(end)
         }
 
         fun addTurn(leftTurn: Boolean, sharp: Boolean) {
-            val totalAngle = if (sharp) 110f else 90f
-            val angleStep = if (leftTurn) (totalAngle / TURN_SEGMENTS) else -(totalAngle / TURN_SEGMENTS)
-            val segLen = SEGMENT_LENGTH * 0.6f
-            repeat(TURN_SEGMENTS) {
+            val totalAngle = if (sharp) 100f else 90f
+            val steps = TURN_SEGMENTS
+            val angleStep = if (leftTurn) (totalAngle / steps) else -(totalAngle / steps)
+            val segLen = SEGMENT_LENGTH * 0.55f
+            repeat(steps) {
                 angle += angleStep
                 val dir = Vector2(cos(rad(angle)), sin(rad(angle)))
                 val normal = Vector2(-dir.y, dir.x)
                 val end = Vector2(pos.x + dir.x * segLen, pos.y + dir.y * segLen)
-                segments.add(TrackSegment(pos.cpy(), end.cpy(), dir.cpy(), normal.cpy(), BASE_WIDTH, BlockType.TURN_LEFT))
+                val type = if (leftTurn) BlockType.TURN_LEFT else BlockType.TURN_RIGHT
+                segments.add(TrackSegment(pos.cpy(), end.cpy(), dir.cpy(), normal.cpy(), BASE_WIDTH, type))
                 pos.set(end)
             }
         }
 
         for (block in blocks) {
-            val w = if (block.type == BlockType.WIDE_STRAIGHT) BASE_WIDTH * 1.4f else BASE_WIDTH
+            val w = if (block.type == BlockType.WIDE_STRAIGHT) BASE_WIDTH * 1.35f else BASE_WIDTH
             when (block.type) {
-                BlockType.STRAIGHT, BlockType.WIDE_STRAIGHT -> addStraightSegments(3, w)
-                BlockType.TURN_LEFT    -> addTurn(true, false)
-                BlockType.TURN_RIGHT   -> addTurn(false, false)
-                BlockType.SHARP_LEFT   -> addTurn(true, true)
-                BlockType.SHARP_RIGHT  -> addTurn(false, true)
-                BlockType.ZIGZAG_LEFT  -> { addTurn(false, false); addTurn(true, false) }
-                BlockType.ZIGZAG_RIGHT -> { addTurn(true, false); addTurn(false, false) }
+                BlockType.STRAIGHT       -> repeat(3) { addSeg(w, BlockType.STRAIGHT) }
+                BlockType.WIDE_STRAIGHT  -> repeat(3) { addSeg(w, BlockType.WIDE_STRAIGHT) }
+                BlockType.TURN_LEFT      -> addTurn(true, false)
+                BlockType.TURN_RIGHT     -> addTurn(false, false)
+                BlockType.SHARP_LEFT     -> addTurn(true, true)
+                BlockType.SHARP_RIGHT    -> addTurn(false, true)
+                BlockType.ZIGZAG_LEFT    -> { addTurn(false, false); addTurn(true, false) }
+                BlockType.ZIGZAG_RIGHT   -> { addTurn(true, false); addTurn(false, false) }
             }
         }
 
-        // Фінішна лінія — кінець останнього сегмента
         if (segments.isNotEmpty()) {
             val last = segments.last()
             finishLine.set(last.end)
@@ -119,13 +119,18 @@ class Track(private val blocks: List<TrackBlock>, private val isTutorial: Boolea
         }
     }
 
-    // Знайти найближчий сегмент до позиції (для перевірки виходу за межі)
-    fun getSegmentAt(worldPos: Vector2, searchRadius: Float = 600f): TrackSegment? {
+    // Знайти найближчий сегмент до позиції
+    fun getSegmentAt(worldPos: Vector2, searchRadius: Float = 800f): TrackSegment? {
         var best: TrackSegment? = null
         var bestDist = Float.MAX_VALUE
         for (seg in segments) {
-            val mid = Vector2((seg.start.x + seg.end.x) / 2f, (seg.start.y + seg.end.y) / 2f)
-            val d = mid.dst(worldPos)
+            // Проекція точки на відрізок
+            val ab = Vector2(seg.end.x - seg.start.x, seg.end.y - seg.start.y)
+            val ap = Vector2(worldPos.x - seg.start.x, worldPos.y - seg.start.y)
+            val lenSq = ab.x * ab.x + ab.y * ab.y
+            val t = if (lenSq > 0f) (ap.dot(ab) / lenSq).coerceIn(0f, 1f) else 0f
+            val closest = Vector2(seg.start.x + ab.x * t, seg.start.y + ab.y * t)
+            val d = worldPos.dst(closest)
             if (d < bestDist && d < searchRadius) {
                 bestDist = d
                 best = seg

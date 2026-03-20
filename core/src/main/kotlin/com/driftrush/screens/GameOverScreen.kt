@@ -93,9 +93,9 @@ class GameOverScreen(
         // Зірки (тільки якщо пройшов)
         if (completed) {
             val starStr = when (stars) {
-                3 -> "\u2B50\u2B50\u2B50"
-                2 -> "\u2B50\u2B50\u2606"
-                else -> "\u2B50\u2606\u2606"
+                3 -> "***  "
+                2 -> "**o  "
+                else -> "*oo  "
             }
             game.fontLarge.setColor(1f, 0.88f, 0.2f, 1f)
             game.fontLarge.draw(game.batch, starStr, W/2f - 72f, H - 180f)
@@ -107,7 +107,7 @@ class GameOverScreen(
 
         // Монети
         game.fontMedium.setColor(1f, 0.85f, 0.2f, 1f)
-        game.fontMedium.draw(game.batch, "+$coinsEarned \uD83E\uDE99", W/2f - 60f, H/2f + 110f)
+        game.fontMedium.draw(game.batch, "+$coinsEarned [M]", W/2f - 60f, H/2f + 110f)
 
         // Рівень
         game.fontSmall.setColor(0.75f, 0.75f, 0.75f, 1f)
@@ -116,7 +116,7 @@ class GameOverScreen(
 
         // Загальні монети
         game.fontSmall.setColor(1f, 0.85f, 0.2f, 1f)
-        game.fontSmall.draw(game.batch, "\uD83E\uDE99 ${game.coins} всього", W/2f - 70f, H/2f + 44f)
+        game.fontSmall.draw(game.batch, "[M] ${game.coins} всього", W/2f - 70f, H/2f + 44f)
 
         // Кнопки текст
         game.fontMedium.setColor(1f, 1f, 1f, 1f)

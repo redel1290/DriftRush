@@ -99,7 +99,7 @@ class ModeSelectScreen(private val game: DriftRushGame) : Screen {
 
             // Замок
             game.fontLarge.setColor(1f, 1f, 1f, 0.6f)
-            game.fontLarge.draw(game.batch, "\uD83D\uDD12", W/2f + 76f, H/2f + 30f)
+            game.fontLarge.draw(game.batch, "[X]", W/2f + 76f, H/2f + 30f)
 
             game.fontSmall.setColor(1f, 1f, 1f, 0.85f)
             val lockDesc = "Щоразу нова траса —\nповна несподіванка!\n\nЗАБЛОКОВАНО\nПройди ${20 - game.completedLevels}\nрівнів для розблокування"

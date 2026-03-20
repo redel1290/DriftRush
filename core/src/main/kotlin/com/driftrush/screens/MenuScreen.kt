@@ -80,7 +80,7 @@ class MenuScreen(private val game: DriftRushGame) : Screen {
 
         // Монети
         game.fontMedium.setColor(0.3f, 0.2f, 0f, 1f)
-        game.fontMedium.draw(game.batch, "\uD83E\uDE99 ${game.coins}", W/2 - 70f, H - 38f)
+        game.fontMedium.draw(game.batch, "[M] ${game.coins}", W/2 - 70f, H - 38f)
 
         // Поточна машина
         val carData = CAR_DATA.find { it.assetName == game.selectedCar }

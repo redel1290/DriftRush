@@ -220,7 +220,7 @@ class GameScreen(
             game.fontSmall.draw(game.batch, "x${scoreManager.multiplier}  COMBO ${scoreManager.combo}", W/2f - 68f, H - 58f)
         }
         game.fontSmall.setColor(1f, 0.85f, 0.2f, 1f)
-        game.fontSmall.draw(game.batch, "\uD83E\uDE99 ${scoreManager.coinsCollected}", 12f, H - 26f)
+        game.fontSmall.draw(game.batch, "[M] ${scoreManager.coinsCollected}", 12f, H - 26f)
         game.fontSmall.setColor(0.9f, 0.9f, 0.9f, 1f)
         game.fontSmall.draw(game.batch, if (isRandom) "РАНДОМ" else "РВ $levelIndex", W - 102f, H - 26f)
         game.batch.end()
@@ -237,7 +237,7 @@ class GameScreen(
                 val tips = listOf(
                     "DRIFT RUSH\n \nМашина їде сама.\nТи керуєш заносом!\n \nТоркнись щоб далі...",
                     "УТРИМУЙ ПАЛЕЦЬ —\nмашина дрифтує!\n \nЧим довше тримаєш,\nтим крутіший занос.\n \nТоркнись щоб далі...",
-                    "Їдь по КРАЮ\nдля бонусних очок!\n \nЗбирай монети \uD83E\uDE99\nна трасі.\n \nТоркнись щоб почати!"
+                    "Їдь по КРАЮ\nдля бонусних очок!\n \nЗбирай монети [M]\nна трасі.\n \nТоркнись щоб почати!"
                 )
                 var ty = H/2f + 130f
                 for (line in tips[tutorialStep].split("\n")) {
